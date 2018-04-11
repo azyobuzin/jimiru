@@ -1,8 +1,11 @@
 [package]
-name = "jimiru_server"
+name = "jimiru"
 version = "0.1.0"
 authors = ["azyobuzin <azyobuzin@users.sourceforge.jp>"]
 publish = false
 
 [dependencies]
-jimiru = { path = "../jimiru" }
+rmp = "0.8"
+rmp-serde = "0.13"
+serde = "1"
+serde_derive = "1"

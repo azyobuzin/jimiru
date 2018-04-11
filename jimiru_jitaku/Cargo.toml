@@ -5,3 +5,4 @@ authors = ["azyobuzin <azyobuzin@users.sourceforge.jp>"]
 publish = false
 
 [dependencies]
+jimiru = { path = "../jimiru" }

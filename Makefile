@@ -1,8 +1,11 @@
 CARGO ?= cargo
-JIMIRU_SERVER_FILES := $(shell find jimiru_server -type f)
-JIMIRU_JITAKU_FILES := $(shell find jimiru_jitaku -type f)
+
 AARCH64_TARGET := aarch64-unknown-linux-gnu
 AARCH64_LINKER := aarch64-linux-gnu-gcc
+
+JIMIRU_LIB_FILES = $(shell find jimiru -type f)
+JIMIRU_SERVER_FILES = $(JIMIRU_LIB_FILES) $(shell find jimiru_server -type f)
+JIMIRU_JITAKU_FILES = $(JIMIRU_LIB_FILES) $(shell find jimiru_jitaku -type f)
 
 .PHONY: all_release all_debug release arm_release debug arm_debug clean
 

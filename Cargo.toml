@@ -1,2 +1,2 @@
 [workspace]
-members = ["jimiru_jitaku", "jimiru_server"]
+members = ["jimiru", "jimiru_jitaku", "jimiru_server"]
