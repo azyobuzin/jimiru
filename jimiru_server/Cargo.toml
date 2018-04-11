@@ -1,0 +1,7 @@
+[package]
+name = "jimiru_server"
+version = "0.1.0"
+authors = ["azyobuzin <azyobuzin@users.sourceforge.jp>"]
+publish = false
+
+[dependencies]

@@ -1,0 +1,2 @@
+[workspace]
+members = ["jimiru_jitaku", "jimiru_server"]
