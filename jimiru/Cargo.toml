@@ -5,6 +5,7 @@ authors = ["azyobuzin <azyobuzin@users.sourceforge.jp>"]
 publish = false
 
 [dependencies]
+ring = "0.12"
 rmp = "0.8"
 rmp-serde = "0.13"
 serde = "1"
