@@ -33,7 +33,7 @@ aarch64_release: target/$(AARCH64_TARGET)/release/jimiru_jitaku
 debug: target/debug/jimiru_server target/debug/jimiru_jitaku
 aarch64_debug: target/$(AARCH64_TARGET)/debug/jimiru_jitaku
 
-check:
+check: $(OPENSSL_DEST_FILES)
 	$(CARGO_ENV) $(CARGO) check --all
 
 target/release/jimiru_server target/release/jimiru_jitaku: $(JIMIRU_SERVER_SOURCE) $(OPENSSL_DEST_FILES)
