@@ -6,3 +6,4 @@ publish = false
 
 [dependencies]
 jimiru = { path = "../jimiru" }
+native-tls = "0.1"

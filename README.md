@@ -12,3 +12,4 @@ jimiru_server からマシン起動命令を受け取ると、マジックパケ
 通常のビルドは cargo で行うことができます。
 
 jimiru_jitaku を ARM64 向けにビルドする場合は `gcc-aarch64-linux-gnu` パッケージが必要です。
+OpenSSL のクロスコンパイルを含めて、 `make` で行うことができます。
