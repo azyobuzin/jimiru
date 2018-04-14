@@ -88,7 +88,6 @@ impl WorkerToServerMessage {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct WorkerInfo {
     pub worker_name: String,
-    pub version: u32,
     pub machines: Vec<MachineInfo>,
 }
 

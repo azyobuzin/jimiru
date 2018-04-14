@@ -134,10 +134,10 @@ impl Serialize for HwAddr {
 
 impl<'de> Deserialize<'de> for HwAddr {
     fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        const EXPECTING: &'static str = "an string like \"FF:FF:FF:FF:FF:FF\" or \"FF-FF-FF-FF-FF-FF\"";
+        const EXPECTING: &'static str = "a string like \"FF:FF:FF:FF:FF:FF\" or \"FF-FF-FF-FF-FF-FF\"";
 
         struct HwAddrVisitor;
-        impl <'de> de::Visitor<'de> for HwAddrVisitor {
+        impl<'de> de::Visitor<'de> for HwAddrVisitor {
             type Value = HwAddr;
 
             fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
