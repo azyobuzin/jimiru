@@ -36,13 +36,17 @@ aarch64_debug: target/$(AARCH64_TARGET)/debug/jimiru_jitaku
 check: $(OPENSSL_DEST_FILES)
 	$(CARGO_ENV) $(CARGO) check --all
 
-target/release/jimiru_server target/release/jimiru_jitaku: $(JIMIRU_SERVER_SOURCE) $(OPENSSL_DEST_FILES)
+target/release/jimiru_server: $(JIMIRU_SERVER_SOURCE) $(OPENSSL_DEST_FILES)
+target/release/jimiru_jitaku: $(JIMIRU_JITAKU_SOURCE) $(OPENSSL_DEST_FILES)
+target/release/jimiru_server target/release/jimiru_jitaku:
 	$(CARGO_ENV) $(CARGO) build -p $(notdir $@) --release
 
 target/$(AARCH64_TARGET)/release/jimiru_jitaku: $(JIMIRU_JITAKU_SOURCE) $(OPENSSL_DEST_FILES_AARCH64)
 	$(CARGO_ENV_AARCH64) $(CARGO) rustc -p jimiru_jitaku --release --target $(AARCH64_TARGET) -- -C linker=$(AARCH64_LINKER)
 
-target/debug/jimiru_server target/debug/jimiru_jitaku: $(JIMIRU_SERVER_SOURCE) $(OPENSSL_DEST_FILES)
+target/debug/jimiru_server: $(JIMIRU_SERVER_SOURCE) $(OPENSSL_DEST_FILES)
+target/debug/jimiru_jitaku: $(JIMIRU_JITAKU_SOURCE) $(OPENSSL_DEST_FILES)
+target/debug/jimiru_server target/debug/jimiru_jitaku:
 	$(CARGO_ENV) $(CARGO) build -p $(notdir $@)
 
 target/$(AARCH64_TARGET)/debug/jimiru_jitaku: $(JIMIRU_JITAKU_SOURCE) $(OPENSSL_DEST_FILES_AARCH64)

@@ -1,69 +1,60 @@
-use std::fmt;
-use std::net;
-use std::ops::Deref;
+use std::error::Error;
+use std::path::Path;
 use jimiru::HwAddr;
-use serde::{de, Deserialize, Deserializer, Serialize, Serializer};
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct Config {
-    /// このワーカーの表示名
-    pub worker_name: String,
+    /// このワーカーに関する設定
+    pub worker: WorkerConfig,
+    /// 接続先サーバーの設定（複数設定可能）
+    pub servers: Vec<ServerConfig>,
     /// マジックパケットを送るマシンの情報
     pub machines: Vec<MachineConfig>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
+pub struct WorkerConfig {
+    /// このワーカーの表示名
+    pub name: String,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct ServerConfig {
+    /// 接続先ホストとポート番号
+    pub host: String,
+    /// TLS を使用するかどうか
+    #[serde(default)]
+    pub use_tls: bool,
+    /// TLS 接続時にドメイン名の検証をするかどうか
+    #[serde(default = "default_validate_certificate")]
+    pub validate_certificate: bool,
+}
+
+fn default_validate_certificate() -> bool { true }
+
+#[derive(Debug, Clone, Deserialize)]
 pub struct MachineConfig {
     /// マシンの表示名
-    pub display_name: String,
-    /// IP アドレス（ping 用）
-    pub ip_addr: IpAddr,
+    pub name: String,
+    /// ホスト名または IP アドレス（ping 用）
+    pub host: String,
     /// MAC アドレス（マジックパケット用）
     pub mac_addr: HwAddr,
 }
 
-#[derive(Copy, Clone, Eq, PartialEq, Debug, Hash)]
-pub struct IpAddr(pub net::IpAddr);
+pub fn read_config_file<P: AsRef<Path>>(config_file: P) -> Result<Config, Box<Error>> {
+    use std::fs::File;
+    use std::io::Read;
+    use toml;
 
-impl From<net::IpAddr> for IpAddr {
-    fn from(x: net::IpAddr) -> Self { IpAddr(x) }
-}
+    let (buf, bytes_read) = {
+        let mut f = File::open(config_file)?;
+        // File は read_to_end をオーバーライドしていないので自分で capacity を確保
+        let mut buf = Vec::with_capacity(f.metadata()?.len() as usize);
+        let bytes_read = f.read_to_end(&mut buf)?;
+        (buf, bytes_read)
+    };
 
-impl Deref for IpAddr {
-    type Target = net::IpAddr;
-    fn deref(&self) -> &net::IpAddr { &self.0 }
-}
-
-impl fmt::Display for IpAddr {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        fmt::Display::fmt(&self.0, f)
-    }
-}
-
-impl Serialize for IpAddr {
-    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        serializer.serialize_str(&self.to_string())
-    }
-}
-
-impl<'de> Deserialize<'de> for IpAddr {
-    fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        struct IpAddrVisitor;
-        impl<'de> de::Visitor<'de> for IpAddrVisitor {
-            type Value = IpAddr;
-
-            fn expecting(&self, f: &mut fmt::Formatter) -> fmt::Result {
-                f.write_str("an IP address string")
-            }
-
-            fn visit_str<E: de::Error>(self, v: &str) -> Result<IpAddr, E> {
-                match v.parse() {
-                    Ok(x) => Ok(IpAddr(x)),
-                    Err(x) => Err(E::custom(x)),
-                }
-            }
-        }
-
-        deserializer.deserialize_str(IpAddrVisitor)
-    }
+    // read_to_end は Vec を拡張するだけ拡張してサイズを戻さないので、範囲を指定
+    Ok(toml::from_slice(&buf[..bytes_read])?)
 }

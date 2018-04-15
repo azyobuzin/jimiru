@@ -9,3 +9,5 @@ mod hwaddr;
 pub mod messages;
 
 pub use hwaddr::HwAddr;
+
+pub const DEFAULT_PORT: u16 = 61011;
